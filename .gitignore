@@ -1,0 +1,14 @@
+# here we specify files, file types or folder that we want dont want to store on github
+
+
+map-builder.R
+
+www/ 
+
+*.Rhistory
+
+.Rproj.user
+
+.Rhistory
+
+.DS_Store
