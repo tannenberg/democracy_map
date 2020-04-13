@@ -3,7 +3,17 @@
 
 map-builder.R
 
+data-prep.R
+
 www/ 
+
+rsconnect/
+
+data/
+
+leaflet-map/
+
+dem-map-tester/
 
 *.Rhistory
 
