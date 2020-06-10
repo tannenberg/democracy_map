@@ -3,8 +3,6 @@
 # Load packages and data
 library(shiny)
 library(tidyverse)
-library(sf)
-library(showtext)
 library(shinyWidgets)
 
 
@@ -21,16 +19,18 @@ var_title <- list(c("Rättvisa val", "Frihet", "Att alla deltar", "Öppenhet", "
                   c("Fair elections", "Freedom", "Everyone participates", "Transparency", "Equality")
 )
 
+
 vdem <- c("Data från världens största demokratimätningsprojekt, The Varieties of Democracy Institute vid Göteborgs Universitet.",
           "Data from the worlds largest democracy measurement project, The Varieties of Democracy Instutute at the University of Gothenburg") 
 
 var_info <- list(
-  c("Den elektorala demokratiprincipen avser det grundläggande värdet att ledare och regeringar är lyhörda sina medborgare. Rättvisa val innebär inte enbart att val hålls, utan även att utbredd rösträtt; att politiska och civilsamhällsorganisationer kan verka fritt; att valen inte kantas av bedrägeri och oegentligheter; samt att valen faktiskt avgör vilka som håller den verkställande makten. För att valen också ska vara rättvisa krävs även yttrandefrihet mellan valen.",
-              "Den liberala demokratiprincipen betonar vikten av frihet och att skydda individen och minoriteters rättigheter mot statens och majoritetens tyranni. Den bedömer demokratins kvalitet genom begränsningar av maktutövande. Liberal demokrati uppnås genom konstitutionellt skyddade medborgerliga friheter som yttrandefrihet, en stark rättsstatsprincip, ett oberoende rättsväsende och effektiva kontrollmekanismer med möjlighet att granska och begränsa den verkställande makten.",
-              "Den deltagande principen om demokrati ser till medborgarnas deltagande i alla politiska processer, inte enbart i val. Motivet ligger i oron över en grundsten i valdemokrati: att delegera makten till representanter. Deltagande demokrati premierar medborgarnas direkta påverkan, närhelst det är möjligt. Denna modell av demokrati tar således rösträtt för givet, betonar engagemang i civilsamhällets organisationer, direkt demokrati, folkomröstningar, och möjlighet att påverka och delta i lokala politiska organ.", 
-              "Den deliberativa eller samtalande principen om demokrati fokuserar på att beslutsfattande processer är öppna för samtal. En deliberativ process är en process där resonemang baserade på det allmännas bästa avgör politiska beslut - i motsats till känslomässiga vädjan, särintressen eller tvång. Enligt denna princip kräver demokrati mer än en att beslut följer medborgarnas opinion. Det bör också finnas respektfull dialog på alla nivåer - från opinionsbildning till slutgiltig beslut - med informerade och kompetenta deltagare som är öppna för att låta sig övertalas.",
-              "Den jämlika eller egalitära principen om demokrati tar i beaktning att materiella och immateriella ojämlikheter utgör hinder för formella rättigheter och friheter och underminerar deltagande från samhällets samtliga sociala grupperingar. En jämlik demokrati uppnås när samtliga samhällsgrupper åtnjuter samma rättigheter och friheter; och att resurser fördelas lika mellan dessa; samt att samtliga samhällsgrupper och individer har en jämlik tillgång till politisk makt"
-              ), 
+  c("Betyder att de val som hålls är schyssta och att valresultatet respekteras. Grundläggande för rättvisa val är att ledare och regeringar lyssnar på sina medborgare. Rättvisa val innebär även en utbredd rösträtt, att politiska och andra organisationer från samhället kan verka fritt, att valen inte kantas av bedrägeri och oegentligheter samt att valen faktiskt avgör vilka som håller den verkställande makten. För att valen ska vara rättvisa krävs även yttrandefrihet mellan valen. Rättvisa val kallas med ett annat ord elektoral demokrati.",
+              "Frihet står för individens rätt att stå upp för sig själv och för andra. Demokrati som bygger på frihet handlar om vikten av rättigheter för den enskilda individen gentemot den styrande makten. Frihetsbaserad demokrati uppnås genom skyddade medborgerliga friheter som yttrandefrihet, en stark rättsstatsprincip, ett oberoende rättsväsende och effektiva kontrollmekanismer. Det är även viktigt med möjlighet att granska och begränsa den verkställande makten. Den frihetsbaserade demokratin betonar vikten av att skydda den enskilda individen och minoriteters rättigheter mot statens och majoritetens styre. Detta kallas med ett annat ord för den liberala demokratiprincipen.",
+              "Här har alla möjlighet att vara med och aktivt påverka samhället och beslut som fattas. Den deltagande principen om demokrati ser till medborgarnas deltagande i alla politiska processer, inte enbart i val. Deltagande demokrati premierar medborgarnas direkta påverkan, närhelst det är möjligt. Denna modell av demokrati tar således rösträtt för givet, betonar engagemang i civilsamhällets organisationer, direkt demokrati, folkomröstningar, och möjlighet att påverka och delta i lokala politiska organ.", 
+              "Respektfulla samtal, öppen debatt samt öppet beslutsfattande ingår i en öppenhetsbaserad demokrati. Demokrati där öppenhet är i fokus handlar om att beslutsfattande processer är öppna för samtal och dialog. En öppen process där resonemang baserade på det allmännas bästa avgör politiska beslut . Enligt denna princip kräver demokrati mer än att beslut följer medborgarnas opinion. Det bör också finnas respektfull dialog på alla nivåer - från opinionsbildning till slutgiltig beslut - med informerade och kompetenta deltagare som är öppna för att låta sig övertalas. Denna demokratiform kallas även för deliberativ eller samtalande demokrati.",
+              "Alla ska ha samma faktiska möjligheter att delta i samhället och att alla kan ta del av samma rättigheter. En jämlik demokrati uppnås när samtliga samhällsgrupper åtnjuter samma rättigheter och friheter; och att resurser fördelas lika mellan dessa; samt att samtliga samhällsgrupper och individer har en jämlik tillgång till politisk makt. Den jämlika principen om demokrati tar i beaktning att materiella och immateriella ojämlikheter utgör hinder för formella rättigheter och friheter och underminerar deltagande från samhällets samtliga sociala grupperingar. Detta är den egalitära demokratin."
+    ), 
+  
   c("The electoral principle of democracy seeks to embody the core value of making rulers
 responsive to citizens, achieved through electoral competition for the electorate’s approval
 under circumstances when suffrage is extensive; political and civil society organizations can
@@ -68,24 +68,14 @@ equally across all social groups; and groups and individuals enjoy equal access 
 )
 )
 
-slider_titel <- c("Välj ett år och tryck play", "Choose a year and press play")
+#slider_titel <- c("Välj ett år och tryck play", "Choose a year and press play")
 
 no_dem <- c("Ingen Demokrati", "No Democracy")
-high_dem <- c("Mycket Demokratiskt", "Full Democracy")
-
-
-
-#Font stuff
-#font_add("Georgia", "Georgia.ttf")
-#font_families()
+high_dem <- c("Mycket Demokrati", "Full Democracy")
 
 
 ui <- fluidPage(
   
-  #Text body font in Georgia
-  #tags$style(HTML('body {font-family:"Georgia",Georgia,Serif; background-color:white}')),
-  
-
   tags$head(includeCSS("www/style.css")),
            
   plotOutput(outputId = "map", height = 800), 
@@ -104,12 +94,11 @@ ui <- fluidPage(
   ),
   
   
-  
   absolutePanel(id = "dimension", class = "panel panel-default", fixed = TRUE,
                 draggable = TRUE, top = "650px", left = 60, right = "auto", bottom = "auto",
                 width = 300, height = "auto", 
                 
-                tags$strong("Välj en dimension av demokrati"),
+                #tags$strong("Välj en dimension av demokrati"),
                 
                 radioButtons(inputId = "variable", 
                              label = "",
@@ -135,25 +124,29 @@ ui <- fluidPage(
                 
                 textOutput(outputId = "var_text"), 
                 
-                hr(), 
-                
-                textOutput(outputId = "vdem_out"),
-                
                 
   ), 
   
-  #setSliderColor(col_high[cleanFun(textOutput(outputId = "var_col"))], 1),
+  absolutePanel(id = "vdem", class = "panel panel-default", fixed = TRUE,
+                draggable = TRUE, top = "auto", left = "auto", right = 5, bottom = 5,
+                width = 600, height = "auto", 
+                
+                textOutput(outputId = "vdem_out"),
+                
+  ), 
   
-  setSliderColor("#b8b8b8", 1),
   
-  tags$head(tags$style(type='text/css', ".slider-animate-button {font-size: 40pt !important; color: #b8b8b8}")),
+  
+  setSliderColor("#5c5c5c", 1),
+  
+  tags$head(tags$style(type='text/css', ".slider-animate-button {font-size: 40pt !important; color: #5c5c5c}")),
   
   
   absolutePanel(id = "slider", class = "panel panel-default", fixed = TRUE,
                 draggable = TRUE, top = "650px", left = "380px", right = "auto", bottom = "auto",
                 width = 540, height = "auto", 
               
-                tags$strong(textOutput(outputId = "slider_titel_out")),
+                #tags$strong(textOutput(outputId = "slider_titel_out")),
                 
                 sliderInput("obs", "animation", "Looping Animation:",
                             inputId = "year",
@@ -164,12 +157,6 @@ ui <- fluidPage(
                             sep = "", 
                             width = "100%"
                             ),
-                
-
-                
-                
-                
-               
                 
               
   ) 
@@ -218,10 +205,16 @@ server <- function(input, output, session) {
     
   })
   
-  output$slider_titel_out <- renderText({
-    slider_titel[as.numeric(input$language)]
+  
+  output$slider_col_out <- renderPrint({
+    slider_col[as.numeric(input$variable)]
     
   })
+  
+  #output$slider_titel_out <- renderText({
+  #  slider_titel[as.numeric(input$language)]
+  #  
+  #})
   
   output$vdem_out <- renderText({
     vdem[as.numeric(input$language)]
@@ -257,12 +250,12 @@ server <- function(input, output, session) {
                             na.value = "#e2e2e2",
                             guide = guide_legend(
                             direction = "horizontal",
-                            #  keyheight = unit(3, units = "mm"),
+                            #keyheight = unit(3, units = "mm"),
                             #keywidth = unit(3, units = "mm"),
                             title.position = 'top',
                             title.hjust	= .5,
-                            #  #title.hjust = 0.5,
-                            label.hjust = ,
+                            title.vjust	= -2,
+                            #label.vjust = -7,
                             nrow = 1,
                             #  #byrow = T,
                             label.position = "top"
@@ -270,8 +263,7 @@ server <- function(input, output, session) {
                              ) +
           coord_sf() +
           theme(#legend.position = c(0.40, 0.05), 
-                #legend.position = c(0.70, 0.3), 
-                legend.position = "top",            
+                legend.position = "bottom",            
                 legend.title=element_text(family = "Georgia", size=30), 
                 text = element_text(family = "Georgia", size = 16) # eventuellt måste jag kommentera ut denna 
                 )

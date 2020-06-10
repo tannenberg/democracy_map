@@ -1,0 +1,72 @@
+
+/* Customize fonts */
+body, label, input, button, select { 
+  font-family: 'Georgia', serif;
+  font-weight: 200;
+}
+h1, h2, h3, h4 { font-weight: 400; }
+
+
+#dimension {
+  /* Appearance */
+  background-color: white;
+  padding: 0 20px 20px 20px;
+  border: white;
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.8;
+  
+  
+  
+}
+
+
+#language{
+   /* Appearance */
+  background-color: white;
+  padding: 0 20px 20px 20px;
+  border: white;
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.8;
+  
+}
+
+#slider {
+  /* Appearance */
+  background-color: white;
+  padding: 0 20px 20px 20px;
+  border: white;
+  cursor: move;
+  opacity: 0.8;
+  
+}
+
+
+#information {
+  /* Appearance */
+  background-color: white;
+  padding: 0 20px 20px 20px;
+  cursor: move;
+  border: white;
+  /* Fade out while not hovering */
+  opacity: 0.8;
+  transition: opacity 500ms 1s;
+}
+#information:hover {
+  /* Fade in while hovering */
+  opacity: 0.95;
+  transition-delay: 0;
+}
+
+
+#vdem {
+  /* Appearance */
+  background-color: white;
+  padding: 0 20px 20px 20px;
+  cursor: move;
+  border: white;
+  /* Fade out while not hovering */
+  opacity: 0.35;
+  transition: opacity 500ms 1s;
+}
