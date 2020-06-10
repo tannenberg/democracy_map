@@ -5,9 +5,9 @@ account: tannenberg
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1940363
-bundleId: 3007409
+bundleId: 3247818
 url: https://tannenberg.shinyapps.io/democracy_map/
-when: 1586793588.69617
+when: 1591717141.29316
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: data-prep.R|helptext.txt|map-builder.R|data/V-Dem-CY-Full+Others-v10.rds|dem-map-tester/app.R|dem-map-tester/www/bootstrap.css|dem-map-tester/www/style.css|dem-map-tester/www/world-test.rds|www/bootstrap.css|www/vdem.rds|www/world.rds|leaflet-map
+ignoredFiles: extra

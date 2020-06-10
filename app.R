@@ -5,42 +5,52 @@ library(shiny)
 library(tidyverse)
 library(sf)
 library(showtext)
+library(shinyWidgets)
 
-world <- read_rds("www/world-test.rds")
 
-col_low <-  c("#cfdceb","#d6f2f6","#dbe8e6","#fee0d0","#fad9ea")
-col_high <- c("#0F509B","#32BED2","#4B8C82","#FA6414","#E64196")  
-indicator <- c("v2x_polyarchy","v2x_libdem","v2x_partipdem","v2x_delibdem" ,"v2x_egaldem")
+world_grey <- read_rds("www/world2-grey.rds")
+world <- read_rds("www/world2.rds")
+
+col_low <-  c("#cfdceb","#d6f2f6","#dbe8e6","#defdd8","#fad9ea", "#ebe4d1")
+col_high <- c("#0F509B","#32BED2","#4B8C82","#5af53c","#E64196", "#9B7819")  
+indicator <- c("v2x_polyarchy","v2x_libdem","v2x_partipdem","v2x_delibdem" ,"v2x_egaldem", "v2pepwrort")
 
 df_colors <- data.frame(indicator, col_high, col_low)
+#var_title <- c("Rättvisa val", "Frihet", "Att alla deltar", "Öppenhet", "Jämlikhet", "Rätten att få sticka ut")
+var_title <- list(c("Rättvisa val", "Frihet", "Att alla deltar", "Öppenhet", "Jämlikhet", "Rätten att få sticka ut"), 
+                  c("Fair elections", "Freedom", "Everyone participates", "Transparency", "Equality", "The right be different")
+)
 
-choices_vars <- c("Yttrandefrihet" = 'v2x_libdem', 
-             "Rättvisa val" = "v2x_polyarchy",
-             "Majoritetsstyre" = "v2x_polyarchy",
-             "Öppenhet" = "v2x_libdem", 
-             "Jämlikhet" = "v2x_egaldem",
-             "Att alla deltar" = "v2x_partipdem",
-             "Samförstånd" = "v2x_delibdem")
-
-var_info <- c("The electoral principle of democracy seeks to embody the core value of making rulers
+var_info <- list(
+  c("Den elektorala demokratiprincipen avser det grundläggande värdet att ledare och regeringar är lyhörda sina medborgare. Rättvisa val innebär inte enbart att val hålls, utan även att utbredd rösträtt; att politiska och civilsamhällsorganisationer kan verka fritt; att valen inte kantas av bedrägeri och oegentligheter; samt att valen faktiskt avgör vilka som håller den verkställande makten. För att valen också ska vara rättvisa krävs även yttrandefrihet mellan valen.",
+              "Den liberala demokratiprincipen betonar vikten av frihet och att skydda individen och minoriteters rättigheter mot statens och majoritetens tyranni. Den bedömer demokratins kvalitet genom begränsningar av maktutövande. Liberal demokrati uppnås genom konstitutionellt skyddade medborgerliga friheter som yttrandefrihet, en stark rättsstatsprincip, ett oberoende rättsväsende och effektiva kontrollmekanismer med möjlighet att granska och begränsa den verkställande makten.",
+              "Den deltagande principen om demokrati ser till medborgarnas deltagande i alla politiska processer, inte enbart i val. Motivet ligger i oron över en grundsten i valdemokrati: att delegera makten till representanter. Deltagande demokrati premierar medborgarnas direkta påverkan, närhelst det är möjligt. Denna modell av demokrati tar således rösträtt för givet, betonar engagemang i civilsamhällets organisationer, direkt demokrati, folkomröstningar, och möjlighet att påverka och delta i lokala politiska organ.", 
+              "Den deliberativa eller samtalande principen om demokrati fokuserar på att beslutsfattande processer är öppna för samtal. En deliberativ process är en process där resonemang baserade på det allmännas bästa avgör politiska beslut - i motsats till känslomässiga vädjan, särintressen eller tvång. Enligt denna princip kräver demokrati mer än en att beslut följer medborgarnas opinion. Det bör också finnas respektfull dialog på alla nivåer - från opinionsbildning till slutgiltig beslut - med informerade och kompetenta deltagare som är öppna för att låta sig övertalas.",
+              "Den jämlika eller egalitära principen om demokrati tar i beaktning att materiella och immateriella ojämlikheter utgör hinder för formella rättigheter och friheter och underminerar deltagande från samhällets samtliga sociala grupperingar. En jämlik demokrati uppnås när samtliga samhällsgrupper åtnjuter samma rättigheter och friheter; och att resurser fördelas lika mellan dessa; samt att samtliga samhällsgrupper och individer har en jämlik tillgång till politisk makt", 
+              "Rätten att få sticka ut garanteras formellt av en liberal demokrati men varierar i praktiken. En individs sexuella identitet eller tillhörighet ska inte påverka hens politiska makt. Det här måttet jämför den politiska makt som de som är öppet homosexuella, bisexuella, trans eller queer (HBTQ) har vis-a-vis de HBTQ-personer som inte är öppna med sin sexualitet. Längst ned på spektrumet indikerar måttet att HBTQ -personer är helt uteslutna från det offentliga och därmed berövade verklig politiska makt (även om de kan ha formella rättigheter så som rösträtt). Måttets högsta värde indikerar att HBTQ-personer har ungefär samma politiska makt som heterosexuella." 
+              ), 
+  c("The electoral principle of democracy seeks to embody the core value of making rulers
 responsive to citizens, achieved through electoral competition for the electorate’s approval
 under circumstances when suffrage is extensive; political and civil society organizations can
 operate freely; elections are clean and not marred by fraud or systematic irregularities; and
 elections affect the composition of the chief executive of the country. In between elections,
 there is freedom of expression and an independent media capable of presenting alternative
 views on matters of political relevance.", 
-" The liberal principle of democracy emphasizes the importance of protecting individual
+              
+"The liberal principle of democracy emphasizes the importance of protecting individual
 and minority rights against the tyranny of the state and the tyranny of the majority. The liberal
 model takes a negative view of political power insofar as it judges the quality of democracy by
 the limits placed on government. This is achieved by constitutionally protected civil liberties,
 strong rule of law, an independent judiciary, and effective checks and balances that, together,
 limit the exercise of executive power.", 
+
 "The participatory principle of democracy emphasizes active participation by citizens
 in all political processes, electoral and non-electoral. It is motivated by uneasiness about
 a bedrock practice of electoral democracy: delegating authority to representatives. Thus,
 direct rule by citizens is preferred, wherever practicable. This model of democracy thus takes
 suffrage for granted, emphasizing engagement in civil society organizations, direct democracy,
 and subnational elected bodies.", 
+
 "The deliberative principle of democracy focuses on the process by which decisions
 are reached in a polity. A deliberative process is one in which public reasoning focused on the
 common good motivates political decisions—as contrasted with emotional appeals, solidary
@@ -48,68 +58,74 @@ attachments, parochial interests, or coercion. According to this principle, demo
 more than an aggregation of existing preferences. There should also be respectful dialogue
 at all levels—from preference formation to final decision—among informed and competent
 participants who are open to persuasion.", 
+
 "The egalitarian principle of democracy holds that material and immaterial inequalities inhibit the exercise of formal rights and liberties, and diminish the ability of citizens from
 all social groups to participate. Egalitarian democracy is achieved when rights and freedoms
 of individuals are protected equally across all social groups; and resources are distributed
-equally across all social groups; and groups and individuals enjoy equal access to power")
+equally across all social groups; and groups and individuals enjoy equal access to power", 
+
+"This measure contrasts the political power of heterosexuals and lesbian, gay, bisexual, and transgender (LGBT) members of the polity who are not open about their sexuality
+with LGBT members of the polity who are open about their sexuality. At the lowest end of the spectrum LGBTs are entirely excluded from the public sphere and thus deprived of any real political
+power (even though they may possess formal powers such as the ballot). While at the highest value LGBTs have about the same political power as heterosexuals. Each group enjoys a degree
+of political power that is roughly proportional to their population."
+)
+)
+
+slider_titel <- c("Välj ett år och tryck play", "Choose a year and press play")
+
 
 #Font stuff
 #font_add("Georgia", "Georgia.ttf")
 #font_families()
 
 
-# Define UI for application that draws a map
 ui <- fluidPage(
-  #theme = "style.css",
-  
-  #here are some style things to costum fonts etc. 
-  
-  #Title in 
   
   #Text body font in Georgia
   #tags$style(HTML('body {font-family:"Georgia",Georgia,Serif; background-color:white}')),
   
-  #Header font in Knock out - don't know how to do this!
-  #tags$style(HTML('h1 {font-family:"Georgia",Georgia,Serif}')),
-  
-  
-  #liberal 
-  tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #32BED2}")),
-  #just grey
-  #tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge {background: #737373} .js-irs-0 .irs-bar {background: #737373}")),
-  
-  tags$head(
-    includeCSS("www/style.css")),
-  
-  plotOutput(outputId = "map", height = 900), 
+
+  tags$head(includeCSS("www/style.css")),
+           
+  plotOutput(outputId = "map", height = 800), 
   
   #test with leaflet controls
   
   absolutePanel(id = "dimension", class = "panel panel-default", fixed = TRUE,
-                draggable = FALSE, top = 20, left = 60, right = "auto", bottom = "auto",
+                draggable = TRUE, top = "720px", left = 60, right = "auto", bottom = "auto",
                 width = 300, height = "auto", 
                 
-                #h2("Dimension av demokrati"),
+                radioButtons(inputId = "language", 
+                            label = "",
+                            choiceNames = list("SWE", "ENG"),
+                            choiceValues = c(1,2),
+                            selected = 1
+               ),
+                
+                tags$strong("Välj en dimension av demokrati"),
                 
                 radioButtons(inputId = "variable", 
-                             label = h4("Välj en dimension av demokrati"),
+                             label = "",
                              choiceNames = list(tags$strong(tags$span(style="color:#0F509B", "Rättvisa val")),
-                                                tags$strong(tags$span(style="color:#32BED2", "Yttrandefrihet")),
+                                                tags$strong(tags$span(style="color:#32BED2", "Frihet")),
                                                 tags$strong(tags$span(style="color:#4B8C82", "Att alla deltar")),
-                                                tags$strong(tags$span(style="color:#FA6414", "Samförstånd")),
-                                                tags$strong(tags$span(style="color:#E64196", "Jämlikhet"))
+                                                tags$strong(tags$span(style="color:#5af53c", "Öppenhet")),
+                                                tags$strong(tags$span(style="color:#E64196", "Jämlikhet")), 
+                                                tags$strong(tags$span(style="color:#9B7819", "Rätten att få sticka ut"))
                              ),
-                             choiceValues = c(1,2,3,4,5),
-                             selected = 2
+                             choiceValues = c(1,2,3,4,5,6),
+                             selected = 5
                 ),
                 
+                tags$strong(tags$span(style="color:#b8b8b8", "Länder i grå saknar data")),
+           
   ), 
   
   absolutePanel(id = "information", class = "panel panel-default", fixed = TRUE,
-                draggable = FALSE, top = "auto", left = 60, right = "auto", bottom = 140,
-                width = 300, height = "auto", 
+                draggable = TRUE, top = "720px", left = "auto", right = 40, bottom = "auto",
+                width = 600, height = "auto", 
                 
-                h4("Information"),
+                tags$strong(textOutput(outputId = "var_title_out")), 
                 
                 textOutput(outputId = "var_text"), 
                 
@@ -119,29 +135,42 @@ ui <- fluidPage(
                 
   ), 
   
+  #setSliderColor(col_high[cleanFun(textOutput(outputId = "var_col"))], 1),
+  
+  setSliderColor("#b8b8b8", 1),
+  
+  tags$head(tags$style(type='text/css', ".slider-animate-button {font-size: 40pt !important; color: #b8b8b8}")),
+  
+  
   absolutePanel(id = "slider", class = "panel panel-default", fixed = TRUE,
-                draggable = FALSE, top = 20, left = "auto", right = 60, bottom = "auto",
-                width = 700, height = "auto", 
+                draggable = TRUE, top = "720px", left = "380px", right = "auto", bottom = "auto",
+                width = 540, height = "auto", 
               
-                sliderInput("animation", "Looping Animation:",
+                tags$strong(textOutput(outputId = "slider_titel_out")),
+                
+                sliderInput("obs", "animation", "Looping Animation:",
                             inputId = "year",
-                            label = h4("Välj ett år och tryck play"),
+                            label = "",
                             min = 1900, max = 2019,
                             value = 2019, step = 1,
                             animate = animationOptions(interval = 800, loop = FALSE),
                             sep = "", 
                             width = "100%"
-                            ),  
+                            ),
+                
+
                 
                 
-  )
-  
-  
-)
+                
+               
+                
+              
+  ) 
+) 
   
   
 # 
-server <- function(input, output) {
+server <- function(input, output, session) {
   
   world_df <- reactive({
 
@@ -152,8 +181,22 @@ server <- function(input, output) {
   })
     
  
+  #output$var_col <- renderText({
+  #  as.numeric(input$variable)
+  #  })  
+  
+  output$slider_titel_out <- renderText({
+    slider_titel[as.numeric(input$language)]
+    
+  })
+  
+  output$var_title_out <- renderText({
+    var_title[[as.numeric(input$language)]][as.numeric(input$variable)]
+    
+  })
+  
   output$var_text <- renderText({
-    var_info[as.numeric(input$variable)]
+    var_info[[as.numeric(input$language)]][as.numeric(input$variable)]
     
     })
   
@@ -163,6 +206,7 @@ server <- function(input, output) {
       world_df() %>% 
         filter(year == input$year) %>% 
         ggplot() +
+          geom_sf(data=world_grey, fill= "#e2e2e2", color= "white", size=.01) +
           geom_sf(aes(fill=value), color="white", size=.1) +
           theme_void() +
           scale_fill_gradient(low = col_low[as.numeric(input$variable)],
@@ -171,31 +215,31 @@ server <- function(input, output) {
                             breaks = c(seq(0,1, .1)),
                             labels=c("Ingen Demokrati", rep("", 9), "Mycket Demokrati"),
                             limits = c(0,1),
-                            na.value = "white",
+                            na.value = "#e2e2e2",
                             guide = guide_legend(
                             direction = "horizontal",
                             #  keyheight = unit(3, units = "mm"),
-                            #  keywidth = unit(50/length(labels), units = "mm"),
+                            #keywidth = unit(3, units = "mm"),
                             title.position = 'top',
                             title.hjust	= .5,
                             #  #title.hjust = 0.5,
-                            label.hjust = 2,
+                            label.hjust = ,
                             nrow = 1,
                             #  #byrow = T,
-                            label.position = "bottom"
+                            label.position = "top"
                             )
                              ) +
           coord_sf() +
-          theme(legend.position = c(0.5, 0.025), 
-                legend.title=element_text(size=30), 
-                text = element_text(family = "Georgia") # eventuellt måste jag kommentera ut denna 
+          theme(#legend.position = c(0.40, 0.05), 
+                #legend.position = c(0.70, 0.3), 
+                legend.position = "top",            
+                legend.title=element_text(family = "Georgia", size=30), 
+                text = element_text(family = "Georgia", size = 16) # eventuellt måste jag kommentera ut denna 
                 )
       
     }, #height="auto", width = "auto"
     )
-    
 
-    
 }
 
 # Run the application 
