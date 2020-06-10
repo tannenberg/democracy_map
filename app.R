@@ -11,23 +11,25 @@ library(shinyWidgets)
 world_grey <- read_rds("www/world2-grey.rds")
 world <- read_rds("www/world2.rds")
 
-col_low <-  c("#cfdceb","#d6f2f6","#dbe8e6","#defdd8","#fad9ea", "#ebe4d1")
-col_high <- c("#0F509B","#32BED2","#4B8C82","#5af53c","#E64196", "#9B7819")  
-indicator <- c("v2x_polyarchy","v2x_libdem","v2x_partipdem","v2x_delibdem" ,"v2x_egaldem", "v2pepwrort")
+col_low <-  c("#cfdceb","#d6f2f6","#dbe8e6","#defdd8","#fad9ea")
+col_high <- c("#0F509B","#32BED2","#4B8C82","#5af53c","#E64196")  
+indicator <- c("v2x_polyarchy","v2x_libdem","v2x_partipdem","v2x_delibdem" ,"v2x_egaldem")
 
 df_colors <- data.frame(indicator, col_high, col_low)
-#var_title <- c("Rättvisa val", "Frihet", "Att alla deltar", "Öppenhet", "Jämlikhet", "Rätten att få sticka ut")
-var_title <- list(c("Rättvisa val", "Frihet", "Att alla deltar", "Öppenhet", "Jämlikhet", "Rätten att få sticka ut"), 
-                  c("Fair elections", "Freedom", "Everyone participates", "Transparency", "Equality", "The right be different")
+
+var_title <- list(c("Rättvisa val", "Frihet", "Att alla deltar", "Öppenhet", "Jämlikhet"), 
+                  c("Fair elections", "Freedom", "Everyone participates", "Transparency", "Equality")
 )
+
+vdem <- c("Data från världens största demokratimätningsprojekt, The Varieties of Democracy Institute vid Göteborgs Universitet.",
+          "Data from the worlds largest democracy measurement project, The Varieties of Democracy Instutute at the University of Gothenburg") 
 
 var_info <- list(
   c("Den elektorala demokratiprincipen avser det grundläggande värdet att ledare och regeringar är lyhörda sina medborgare. Rättvisa val innebär inte enbart att val hålls, utan även att utbredd rösträtt; att politiska och civilsamhällsorganisationer kan verka fritt; att valen inte kantas av bedrägeri och oegentligheter; samt att valen faktiskt avgör vilka som håller den verkställande makten. För att valen också ska vara rättvisa krävs även yttrandefrihet mellan valen.",
               "Den liberala demokratiprincipen betonar vikten av frihet och att skydda individen och minoriteters rättigheter mot statens och majoritetens tyranni. Den bedömer demokratins kvalitet genom begränsningar av maktutövande. Liberal demokrati uppnås genom konstitutionellt skyddade medborgerliga friheter som yttrandefrihet, en stark rättsstatsprincip, ett oberoende rättsväsende och effektiva kontrollmekanismer med möjlighet att granska och begränsa den verkställande makten.",
               "Den deltagande principen om demokrati ser till medborgarnas deltagande i alla politiska processer, inte enbart i val. Motivet ligger i oron över en grundsten i valdemokrati: att delegera makten till representanter. Deltagande demokrati premierar medborgarnas direkta påverkan, närhelst det är möjligt. Denna modell av demokrati tar således rösträtt för givet, betonar engagemang i civilsamhällets organisationer, direkt demokrati, folkomröstningar, och möjlighet att påverka och delta i lokala politiska organ.", 
               "Den deliberativa eller samtalande principen om demokrati fokuserar på att beslutsfattande processer är öppna för samtal. En deliberativ process är en process där resonemang baserade på det allmännas bästa avgör politiska beslut - i motsats till känslomässiga vädjan, särintressen eller tvång. Enligt denna princip kräver demokrati mer än en att beslut följer medborgarnas opinion. Det bör också finnas respektfull dialog på alla nivåer - från opinionsbildning till slutgiltig beslut - med informerade och kompetenta deltagare som är öppna för att låta sig övertalas.",
-              "Den jämlika eller egalitära principen om demokrati tar i beaktning att materiella och immateriella ojämlikheter utgör hinder för formella rättigheter och friheter och underminerar deltagande från samhällets samtliga sociala grupperingar. En jämlik demokrati uppnås när samtliga samhällsgrupper åtnjuter samma rättigheter och friheter; och att resurser fördelas lika mellan dessa; samt att samtliga samhällsgrupper och individer har en jämlik tillgång till politisk makt", 
-              "Rätten att få sticka ut garanteras formellt av en liberal demokrati men varierar i praktiken. En individs sexuella identitet eller tillhörighet ska inte påverka hens politiska makt. Det här måttet jämför den politiska makt som de som är öppet homosexuella, bisexuella, trans eller queer (HBTQ) har vis-a-vis de HBTQ-personer som inte är öppna med sin sexualitet. Längst ned på spektrumet indikerar måttet att HBTQ -personer är helt uteslutna från det offentliga och därmed berövade verklig politiska makt (även om de kan ha formella rättigheter så som rösträtt). Måttets högsta värde indikerar att HBTQ-personer har ungefär samma politiska makt som heterosexuella." 
+              "Den jämlika eller egalitära principen om demokrati tar i beaktning att materiella och immateriella ojämlikheter utgör hinder för formella rättigheter och friheter och underminerar deltagande från samhällets samtliga sociala grupperingar. En jämlik demokrati uppnås när samtliga samhällsgrupper åtnjuter samma rättigheter och friheter; och att resurser fördelas lika mellan dessa; samt att samtliga samhällsgrupper och individer har en jämlik tillgång till politisk makt"
               ), 
   c("The electoral principle of democracy seeks to embody the core value of making rulers
 responsive to citizens, achieved through electoral competition for the electorate’s approval
@@ -62,16 +64,15 @@ participants who are open to persuasion.",
 "The egalitarian principle of democracy holds that material and immaterial inequalities inhibit the exercise of formal rights and liberties, and diminish the ability of citizens from
 all social groups to participate. Egalitarian democracy is achieved when rights and freedoms
 of individuals are protected equally across all social groups; and resources are distributed
-equally across all social groups; and groups and individuals enjoy equal access to power", 
-
-"This measure contrasts the political power of heterosexuals and lesbian, gay, bisexual, and transgender (LGBT) members of the polity who are not open about their sexuality
-with LGBT members of the polity who are open about their sexuality. At the lowest end of the spectrum LGBTs are entirely excluded from the public sphere and thus deprived of any real political
-power (even though they may possess formal powers such as the ballot). While at the highest value LGBTs have about the same political power as heterosexuals. Each group enjoys a degree
-of political power that is roughly proportional to their population."
+equally across all social groups; and groups and individuals enjoy equal access to power"
 )
 )
 
 slider_titel <- c("Välj ett år och tryck play", "Choose a year and press play")
+
+no_dem <- c("Ingen Demokrati", "No Democracy")
+high_dem <- c("Mycket Demokratiskt", "Full Democracy")
+
 
 
 #Font stuff
@@ -89,31 +90,36 @@ ui <- fluidPage(
            
   plotOutput(outputId = "map", height = 800), 
   
-  #test with leaflet controls
+  
+  absolutePanel(id = "language", class = "panel panel-default", fixed = TRUE,
+                draggable = TRUE, top = 5, left = "auto", right = 5, bottom = "auto",
+                width = 100, height = "auto",
+  
+                radioButtons(inputId = "language", 
+                             label = "",
+                             choiceNames = list("SWE", "ENG"),
+                             choiceValues = c(1,2),
+                             selected = 1
+                ),
+  ),
+  
+  
   
   absolutePanel(id = "dimension", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "720px", left = 60, right = "auto", bottom = "auto",
+                draggable = TRUE, top = "650px", left = 60, right = "auto", bottom = "auto",
                 width = 300, height = "auto", 
-                
-                radioButtons(inputId = "language", 
-                            label = "",
-                            choiceNames = list("SWE", "ENG"),
-                            choiceValues = c(1,2),
-                            selected = 1
-               ),
                 
                 tags$strong("Välj en dimension av demokrati"),
                 
                 radioButtons(inputId = "variable", 
                              label = "",
-                             choiceNames = list(tags$strong(tags$span(style="color:#0F509B", "Rättvisa val")),
-                                                tags$strong(tags$span(style="color:#32BED2", "Frihet")),
-                                                tags$strong(tags$span(style="color:#4B8C82", "Att alla deltar")),
-                                                tags$strong(tags$span(style="color:#5af53c", "Öppenhet")),
-                                                tags$strong(tags$span(style="color:#E64196", "Jämlikhet")), 
-                                                tags$strong(tags$span(style="color:#9B7819", "Rätten att få sticka ut"))
+                             choiceNames = list(tags$strong(tags$span(style="color:#0F509B", textOutput(outputId = "choice_1"))),
+                                                tags$strong(tags$span(style="color:#32BED2", textOutput(outputId = "choice_2"))),
+                                                tags$strong(tags$span(style="color:#4B8C82", textOutput(outputId = "choice_3"))),
+                                                tags$strong(tags$span(style="color:#5af53c", textOutput(outputId = "choice_4"))),
+                                                tags$strong(tags$span(style="color:#E64196", textOutput(outputId = "choice_5"))) 
                              ),
-                             choiceValues = c(1,2,3,4,5,6),
+                             choiceValues = c(1,2,3,4,5),
                              selected = 5
                 ),
                 
@@ -122,7 +128,7 @@ ui <- fluidPage(
   ), 
   
   absolutePanel(id = "information", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "720px", left = "auto", right = 40, bottom = "auto",
+                draggable = TRUE, top = "650px", left = "auto", right = 40, bottom = "auto",
                 width = 600, height = "auto", 
                 
                 tags$strong(textOutput(outputId = "var_title_out")), 
@@ -131,7 +137,8 @@ ui <- fluidPage(
                 
                 hr(), 
                 
-                "Data från världens största demokratimätningsprojekt, The Varieties of Democracy Institute vid Göteborgs Universitet.",
+                textOutput(outputId = "vdem_out"),
+                
                 
   ), 
   
@@ -143,7 +150,7 @@ ui <- fluidPage(
   
   
   absolutePanel(id = "slider", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "720px", left = "380px", right = "auto", bottom = "auto",
+                draggable = TRUE, top = "650px", left = "380px", right = "auto", bottom = "auto",
                 width = 540, height = "auto", 
               
                 tags$strong(textOutput(outputId = "slider_titel_out")),
@@ -185,8 +192,39 @@ server <- function(input, output, session) {
   #  as.numeric(input$variable)
   #  })  
   
+  
+  output$choice_1 <- renderText({
+    var_title[[as.numeric(input$language)]][1]
+    
+  })
+  
+  output$choice_2 <- renderText({
+    var_title[[as.numeric(input$language)]][2]
+    
+  })
+  
+  output$choice_3 <- renderText({
+    var_title[[as.numeric(input$language)]][3]
+    
+  })
+  
+  output$choice_4 <- renderText({
+    var_title[[as.numeric(input$language)]][4]
+    
+  })
+  
+  output$choice_5 <- renderText({
+    var_title[[as.numeric(input$language)]][5]
+    
+  })
+  
   output$slider_titel_out <- renderText({
     slider_titel[as.numeric(input$language)]
+    
+  })
+  
+  output$vdem_out <- renderText({
+    vdem[as.numeric(input$language)]
     
   })
   
@@ -213,7 +251,8 @@ server <- function(input, output, session) {
                             high = col_high[as.numeric(input$variable)],
                             name =  as.character(input$year),
                             breaks = c(seq(0,1, .1)),
-                            labels=c("Ingen Demokrati", rep("", 9), "Mycket Demokrati"),
+                            labels=c(no_dem[as.numeric(input$language)], rep("", 9),
+                                     high_dem[as.numeric(input$language)]),
                             limits = c(0,1),
                             na.value = "#e2e2e2",
                             guide = guide_legend(

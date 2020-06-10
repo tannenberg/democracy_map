@@ -5,9 +5,9 @@ account: tannenberg
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1940363
-bundleId: 3247818
+bundleId: 3251259
 url: https://tannenberg.shinyapps.io/democracy_map/
-when: 1591717141.29316
+when: 1591786999.03211
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: extra
+ignoredFiles: data/translation_en.csv|examples|extra|multilingualShinyApp-master
