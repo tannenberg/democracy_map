@@ -3,6 +3,9 @@
 body, label, input, button, select { 
   font-family: 'Georgia', serif;
   font-weight: 200;
+  font-size: medium;
+  text-align: justify;
+  
 }
 h1, h2, h3, h4 { font-weight: 400; }
 
@@ -11,10 +14,11 @@ h1, h2, h3, h4 { font-weight: 400; }
   /* Appearance */
   background-color: white;
   padding: 0 20px 20px 20px;
-  border: white;
+  /* border: white;*/
+  border-style: none;
   cursor: move;
   /* Fade out while not hovering */
-  opacity: 0.8;
+  /* opacity: 0.8;*/
   
   
   

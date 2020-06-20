@@ -4,6 +4,15 @@
 library(shiny)
 library(tidyverse)
 library(shinyWidgets)
+library(sf)
+library(showtext)
+
+
+#font settings (comment out if on mac)
+library(extrafont)
+font_import(prompt = FALSE, pattern="georgia.ttf")
+loadfonts(device = "win")
+
 
 
 world_grey <- read_rds("www/world2-grey.rds")
@@ -72,17 +81,19 @@ equally across all social groups; and groups and individuals enjoy equal access 
 
 no_dem <- c("Ingen Demokrati", "No Democracy")
 high_dem <- c("Mycket Demokrati", "Full Democracy")
+missing_data <- c("Länder i grå saknar data", "Countries in grey miss data")
 
+font_add("Georgia", "georgia.ttf")
 
 ui <- fluidPage(
   
   tags$head(includeCSS("www/style.css")),
            
-  plotOutput(outputId = "map", height = 800), 
+  plotOutput(outputId = "map", height = 1000), 
   
   
   absolutePanel(id = "language", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = 5, left = "auto", right = 5, bottom = "auto",
+                draggable = TRUE, top = 10, left = "auto", right = 20, bottom = "auto",
                 width = 100, height = "auto",
   
                 radioButtons(inputId = "language", 
@@ -95,13 +106,15 @@ ui <- fluidPage(
   
   
   absolutePanel(id = "dimension", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "650px", left = 60, right = "auto", bottom = "auto",
-                width = 300, height = "auto", 
+                draggable = FALSE, top = "580px", left = 20, right = "auto", bottom = "auto",
+                width = 255, height = "auto", 
                 
                 #tags$strong("Välj en dimension av demokrati"),
                 
-                radioButtons(inputId = "variable", 
+                prettyRadioButtons(inputId = "variable", 
                              label = "",
+                             bigger = "TRUE",
+                             animation = "pulse",
                              choiceNames = list(tags$strong(tags$span(style="color:#0F509B", textOutput(outputId = "choice_1"))),
                                                 tags$strong(tags$span(style="color:#32BED2", textOutput(outputId = "choice_2"))),
                                                 tags$strong(tags$span(style="color:#4B8C82", textOutput(outputId = "choice_3"))),
@@ -109,15 +122,15 @@ ui <- fluidPage(
                                                 tags$strong(tags$span(style="color:#E64196", textOutput(outputId = "choice_5"))) 
                              ),
                              choiceValues = c(1,2,3,4,5),
-                             selected = 5
+                             selected = 1
                 ),
                 
-                tags$strong(tags$span(style="color:#b8b8b8", "Länder i grå saknar data")),
+                tags$strong(tags$span(style="color:#b8b8b8", textOutput(outputId = "missing_data_out"))),
            
   ), 
   
   absolutePanel(id = "information", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "650px", left = "auto", right = 40, bottom = "auto",
+                draggable = FALSE, top = "800px", left = 20, right = "auto", bottom = "auto",
                 width = 600, height = "auto", 
                 
                 tags$strong(textOutput(outputId = "var_title_out")), 
@@ -128,7 +141,7 @@ ui <- fluidPage(
   ), 
   
   absolutePanel(id = "vdem", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "auto", left = "auto", right = 5, bottom = 5,
+                draggable = FALSE, top = "auto", left = "auto", right = 20, bottom = 10,
                 width = 600, height = "auto", 
                 
                 textOutput(outputId = "vdem_out"),
@@ -137,13 +150,24 @@ ui <- fluidPage(
   
   
   
-  setSliderColor("#5c5c5c", 1),
+  setSliderColor("#525252", 1),
   
-  tags$head(tags$style(type='text/css', ".slider-animate-button {font-size: 40pt !important; color: #5c5c5c}")),
+  tags$head(tags$style(type='text/css', ".slider-animate-button {font-size: 40pt; color: #373737}")),
+  
+  tags$head(tags$style(type='text/css', ".irs-grid-text { font-size: medium; }")),
+  
+  tags$head(tags$style(type='text/css', ".irs-min { font-size: medium; }")),
+  
+  tags$head(tags$style(type='text/css', ".irs-max { font-size: medium; }")),
+  
+  tags$head(tags$style(type='text/css', ".irs-single { font-size: medium; }")),
+  
+  
+  
   
   
   absolutePanel(id = "slider", class = "panel panel-default", fixed = TRUE,
-                draggable = TRUE, top = "650px", left = "380px", right = "auto", bottom = "auto",
+                draggable = FALSE, top = "900px", left = "688px", right = "auto", bottom = "auto",
                 width = 540, height = "auto", 
               
                 #tags$strong(textOutput(outputId = "slider_titel_out")),
@@ -216,6 +240,13 @@ server <- function(input, output, session) {
   #  
   #})
   
+  output$missing_data_out <- renderText({
+    missing_data[as.numeric(input$language)]
+    
+  })
+  
+  
+  
   output$vdem_out <- renderText({
     vdem[as.numeric(input$language)]
     
@@ -262,10 +293,10 @@ server <- function(input, output, session) {
                             )
                              ) +
           coord_sf() +
-          theme(#legend.position = c(0.40, 0.05), 
-                legend.position = "bottom",            
-                legend.title=element_text(family = "Georgia", size=30), 
-                text = element_text(family = "Georgia", size = 16) # eventuellt måste jag kommentera ut denna 
+          theme(legend.position = c(0.50, 0.05), 
+                #legend.position = "bottom",
+                legend.title=element_text(family = "Georgia", size=30, color = "#525252"), 
+                text = element_text(family = "Georgia", size = 16, colour = "#525252") # eventuellt måste jag kommentera ut denna 
                 )
       
     }, #height="auto", width = "auto"
@@ -273,6 +304,6 @@ server <- function(input, output, session) {
 
 }
 
-# Run the application 
+# Run the application fon
 shinyApp(ui = ui, server = server)
 
